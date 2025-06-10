@@ -1,0 +1,15 @@
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Worker.deps.json
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Worker.dll
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Worker.pdb
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Core.dll
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Infrastructure.dll
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Core.pdb
+C:\dev\Investimentos.Worker\bin\Debug\netcoreapp3.1\Investimentos.Infrastructure.pdb
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.csproj.AssemblyReference.cache
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.AssemblyInfoInputs.cache
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.AssemblyInfo.cs
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.csproj.CoreCompileInputs.cache
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.csproj.CopyComplete
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.dll
+C:\dev\Investimentos.Worker\obj\Debug\netcoreapp3.1\Investimentos.Worker.pdb

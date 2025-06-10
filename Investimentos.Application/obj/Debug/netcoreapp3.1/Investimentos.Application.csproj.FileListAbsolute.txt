@@ -1,0 +1,13 @@
+C:\dev\Investimentos.Application\bin\Debug\netcoreapp3.1\Investimentos.Application.deps.json
+C:\dev\Investimentos.Application\bin\Debug\netcoreapp3.1\Investimentos.Application.dll
+C:\dev\Investimentos.Application\bin\Debug\netcoreapp3.1\Investimentos.Application.pdb
+C:\dev\Investimentos.Application\bin\Debug\netcoreapp3.1\Investimentos.Core.dll
+C:\dev\Investimentos.Application\bin\Debug\netcoreapp3.1\Investimentos.Core.pdb
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.csproj.AssemblyReference.cache
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.AssemblyInfoInputs.cache
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.AssemblyInfo.cs
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.csproj.CoreCompileInputs.cache
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.csproj.CopyComplete
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.dll
+C:\dev\Investimentos.Application\obj\Debug\netcoreapp3.1\Investimentos.Application.pdb

@@ -1,0 +1,143 @@
+-- Tabela de usuários
+
+
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único do usuário
+    nome VARCHAR(100) NOT NULL,        -- Nome do usuário
+    email VARCHAR(255) UNIQUE NOT NULL, -- Email único do usuário
+    corretagem DECIMAL(5, 2) NOT NULL  -- Percentual de corretagem
+);
+ 
+-- Tabela de ativos
+CREATE TABLE ativos (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único do ativo
+    codigo VARCHAR(10) UNIQUE NOT NULL, -- Código do ativo, ex: ITSA3
+    nome VARCHAR(100) NOT NULL         -- Nome do ativo
+);
+ 
+-- Tabela de operações
+CREATE TABLE operacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único da operação
+    usuario_id INT NOT NULL,           -- Referência ao usuário
+    ativo_id INT NOT NULL,             -- Referência ao ativo
+    quantidade INT NOT NULL,           -- Quantidade de ativos negociados
+    preco_unitario DECIMAL(10, 2) NOT NULL, -- Preço unitário na operação
+    tipo_operacao ENUM('COMPRA', 'VENDA') NOT NULL, -- Tipo da operação
+    corretagem DECIMAL(10, 2) NOT NULL, -- Valor de corretagem aplicado
+    data_hora DATETIME NOT NULL,        -- Data e hora da operação
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (ativo_id) REFERENCES ativos(id)
+);
+ 
+-- Tabela de cotações
+CREATE TABLE cotacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único da cotação
+    ativo_id INT NOT NULL,             -- Referência ao ativo
+    preco_unitario DECIMAL(10, 4) NOT NULL, -- Preço unitário do ativo (milésimos de segundo)
+    data_hora DATETIME NOT NULL,        -- Data e hora da cotação
+    FOREIGN KEY (ativo_id) REFERENCES ativos(id)
+);
+ 
+-- Tabela de posição
+CREATE TABLE posicoes (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único da posição
+    usuario_id INT NOT NULL,           -- Referência ao usuário
+    ativo_id INT NOT NULL,             -- Referência ao ativo
+    quantidade INT NOT NULL,           -- Quantidade total do ativo na carteira
+    preco_medio DECIMAL(10, 2) NOT NULL, -- Preço médio de aquisição
+    pl DECIMAL(10, 2) NOT NULL,         -- Lucro ou prejuízo (Profit & Loss)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (ativo_id) REFERENCES ativos(id)
+);
+
+Justificativa dos Tipos de Dados:
+-----------------------------------
+INT: Usado para identificadores únicos (IDs) e quantidade de ativos porque é eficiente e suficiente para representar esses valores.
+VARCHAR: Usado para armazenar nomes e códigos de ativos, pois são textos de tamanho variável.
+DECIMAL: Usado para valores monetários (preço unitário, corretagem, P&L) para garantir precisão em cálculos financeiros.
+DATETIME: Utilizado para armazenar data e hora com precisão necessária para rastrear transações e cotações.
+ENUM: Usado para o tipo de operação, restringindo os valores possíveis e garantindo integridade.
+
+-------------------------------------------------------------
+
+Índices Propostos:
+Índice para consulta de operações por usuário e ativo nos últimos 30 dias:
+ 
+CREATE INDEX idx_operacoes_usuario_ativo_data
+ON operacoes (usuario_id, ativo_id, data_hora);
+-------------------------------------------------------------
+ 
+Índice nas cotações para atualização em tempo real:
+CREATE INDEX idx_cotacoes_ativo_data
+ON cotacoes (ativo_id, data_hora);
+
+-------------------------------------------------------------
+
+Consulta Otimizada
+SELECT *
+FROM operacoes
+WHERE usuario_id = ? -- ID do usuário
+  AND ativo_id = ?   -- ID do ativo
+  AND data_hora >= NOW() - INTERVAL 30 DAY; -- Últimos 30 dias
+
+Essa consulta utiliza o índice idx_operacoes_usuario_ativo_data para filtrar rapidamente as operações de um usuário em um ativo específico por data.
+
+-------------------------------------------------------------
+
+Estrutura de Atualização de Posição:
+Trigger para atualizar posição com base na cotação:
+ 
+ 
+CREATE TRIGGER atualiza_posicao
+AFTER INSERT ON cotacoes
+FOR EACH ROW
+BEGIN
+    -- Calcula o lucro/prejuízo (P&L) com base na nova cotação
+    UPDATE posicoes
+    SET pl = (NEW.preco_unitario - preco_medio) * quantidade
+    WHERE ativo_id = NEW.ativo_id;
+END;
+
+-----------------------------------------------------------------
+
+Script para atualizar o preço médio e P&L quando uma operação é registrada:
+ 
+CREATE TRIGGER atualiza_preco_medio_pl
+AFTER INSERT ON operacoes
+FOR EACH ROW
+BEGIN
+    -- Atualiza a posição do usuário para o ativo negociado
+    INSERT INTO posicoes (usuario_id, ativo_id, quantidade, preco_medio, pl)
+    VALUES (NEW.usuario_id, NEW.ativo_id, NEW.quantidade, NEW.preco_unitario, 0)
+    ON DUPLICATE KEY UPDATE
+        quantidade = quantidade + NEW.quantidade,
+        preco_medio = ((preco_medio * quantidade) + (NEW.preco_unitario * NEW.quantidade)) / (quantidade + NEW.quantidade);
+END;
+
+---------------------------------------
+
+
+-- Inserir usuários
+INSERT INTO usuarios (nome, email, corretagem_percentual) VALUES 
+('João Silva', 'joao.silva@email.com', 0.15),
+('Maria Santos', 'maria.santos@email.com', 0.10);
+ 
+-- Inserir ativos
+INSERT INTO ativos (codigo, nome) VALUES 
+('ITSA3', 'Itaúsa'),
+('PETR4', 'Petrobras');
+ 
+-- Inserir operações
+INSERT INTO operacoes (usuario_id, ativo_id, quantidade, preco_unitario, tipo_operacao, corretagem, data_hora) VALUES
+(1, 1, 100, 10.50, 'COMPRA', 1.50, GETDATE()),
+(2, 2, 50, 25.00, 'COMPRA', 2.00, GETDATE());
+ 
+-- Inserir cotações
+INSERT INTO cotacoes (ativo_id, preco_unitario, data_hora) VALUES
+(1, 10.75, GETDATE()),
+(2, 25.10, GETDATE());
+ 
+-- Inserir posições
+INSERT INTO posicoes (usuario_id, ativo_id, quantidade, preco_medio, pl) VALUES
+(1, 1, 100, 10.50, 25.00),
+(2, 2, 50, 25.00, 5.00);
